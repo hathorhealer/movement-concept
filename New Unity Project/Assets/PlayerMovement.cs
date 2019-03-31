@@ -3,26 +3,43 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-
     public Rigidbody rb;
     public float forwardForce = 500f;
     public float sidewaysForce = 500f;
     public float jumpForce = 1000f;
+    public int maxJumps = 2;
+    public int jumpCount;
     bool isforward = false;
     bool isbackward = false;
     bool isright = false;
     bool isleft = false;
     bool isJump = false;
     bool jumpHeld = false;
+    public Vector3 respawn = Vector3.up*3;
+    public bool isGrounded = true;
     public float lowJumpMultiplier = 4f;
     public float fallMultiplier = 6f;
-    
+    public float RespawnHeight = -100f;
+
+    void Awake()
+    {
+        jumpCount = maxJumps;
+    }
+
 
     void Update()
-    {
+    {   
+        
         if (Input.GetKeyDown("space"))
         {
-            isJump = true;
+            if (isGrounded || jumpCount != 0)
+            {
+                isJump = true;
+                jumpCount -= 1;
+            }
+        }
+        if (isJump) {
+            isGrounded = false;
         }
         if (Input.GetKey("space"))
         {
@@ -73,6 +90,10 @@ public class PlayerMovement : MonoBehaviour
     // We mark this as "FixedUpdate" because we are using it to mess with physics
     void FixedUpdate()
     {
+
+        if (rb.position.y<= RespawnHeight) {
+            rb.position = respawn;
+        }
         if (isforward)
         {
             rb.AddForce(-1*forwardForce * Time.deltaTime, 0, 0, ForceMode.VelocityChange);
@@ -95,6 +116,7 @@ public class PlayerMovement : MonoBehaviour
         }
         if (isJump)
         {
+            rb.velocity += Vector3.up * -1 * rb.velocity.y;
             rb.AddForce(0, jumpForce*Time.deltaTime, 0, ForceMode.VelocityChange);
             isJump = false;
         }
