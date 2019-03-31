@@ -4,15 +4,16 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
     public Rigidbody rb;
+    public Camera cameraObject;
     public float forwardForce = 500f;
     public float sidewaysForce = 500f;
     public float jumpForce = 1000f;
     public int maxJumps = 2;
     public int jumpCount;
-    bool isforward = false;
-    bool isbackward = false;
-    bool isright = false;
-    bool isleft = false;
+    bool isForward = false;
+    bool isBackward = false;
+    bool isRight = false;
+    bool isLeft = false;
     bool isJump = false;
     bool jumpHeld = false;
     public Vector3 respawn = Vector3.up*3;
@@ -20,6 +21,11 @@ public class PlayerMovement : MonoBehaviour
     public float lowJumpMultiplier = 4f;
     public float fallMultiplier = 6f;
     public float RespawnHeight = -100f;
+    Vector3 moveDirection = Vector3.zero;
+    float moveHorizontal;
+    float moveVertical;
+    float moveVertiRaw;
+    float moveHoriRaw;
 
     void Awake()
     {
@@ -28,8 +34,11 @@ public class PlayerMovement : MonoBehaviour
 
 
     void Update()
-    {   
-        
+    {
+        moveHorizontal = Input.GetAxis("Horizontal");
+        moveVertical = Input.GetAxis("Vertical");
+        moveHoriRaw = Input.GetAxisRaw("Horizontal");
+        moveVertiRaw = Input.GetAxisRaw("Vertical");
         if (Input.GetKeyDown("space"))
         {
             if (isGrounded || jumpCount != 0)
@@ -52,67 +61,25 @@ public class PlayerMovement : MonoBehaviour
         if (Input.GetKeyUp("space")) {
             jumpHeld = false;
         }
-        if (Input.GetKey("w"))
-        {
-            isforward = true;
-        }
-        if (Input.GetKey("s"))
-        {
-            isbackward = true;
-        }
-        if (Input.GetKey("d"))
-        {
-            isright = true;
-        }
-        if (Input.GetKey("a"))
-        {
-            isleft = true;
-        }
-        if (Input.GetKeyUp("w"))
-        {
-            isforward = false;
-        }
-        if (Input.GetKeyUp("s"))
-        {
-            isbackward = false;
-        }
-        if (Input.GetKeyUp("d"))
-        {
-            isright = false;
-        }
-        if (Input.GetKeyUp("a"))
-        {
-            isleft = false;
-        }
-
     }
 
     // We mark this as "FixedUpdate" because we are using it to mess with physics
     void FixedUpdate()
     {
+        
+
+        moveDirection = Vector3.zero;
+        moveDirection += Camera.main.transform.forward * moveVertical;
+        moveDirection += Camera.main.transform.right * moveHorizontal;
+        moveDirection.y = 0;
+        transform.rotation = Quaternion.LookRotation(moveDirection, Vector2.up);
+
+        rb.AddForce(transform.forward * forwardForce * Time.deltaTime * moveVertiRaw * moveVertical, ForceMode.VelocityChange);
+        rb.AddForce(transform.forward * sidewaysForce * Time.deltaTime * moveHoriRaw * moveHorizontal, ForceMode.VelocityChange);
+
 
         if (rb.position.y<= RespawnHeight) {
             rb.position = respawn;
-        }
-        if (isforward)
-        {
-            rb.AddForce(-1*forwardForce * Time.deltaTime, 0, 0, ForceMode.VelocityChange);
-
-        }
-        if (isbackward)
-        {
-            rb.AddForce(forwardForce * Time.deltaTime, 0, 0, ForceMode.VelocityChange);
-
-        }
-        if (isright)
-        {
-            rb.AddForce(0,0, sidewaysForce* Time.deltaTime, ForceMode.VelocityChange);
-
-        }
-        if (isleft)
-        {
-            rb.AddForce(0,0,-1*sidewaysForce * Time.deltaTime, ForceMode.VelocityChange);
-
         }
         if (isJump)
         {
