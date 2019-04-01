@@ -1,7 +1,7 @@
 ﻿
 using UnityEngine;
 
-public class PlayerMovement : MonoBehaviour
+public class NewPlayerMovement : MonoBehaviour
 {
     public Rigidbody rb;
     public Camera cameraObject;
@@ -16,17 +16,17 @@ public class PlayerMovement : MonoBehaviour
     bool isLeft = false;
     bool isJump = false;
     bool jumpHeld = false;
-    public Vector3 respawn = Vector3.up*3;
+    public Vector3 respawn = Vector3.up * 3;
     public bool isGrounded = true;
     public float lowJumpMultiplier = 4f;
     public float fallMultiplier = 6f;
     public float RespawnHeight = -100f;
-    public Vector3 moveDirection = Vector3.zero;
+    Vector3 moveDirection = Vector3.zero;
     float moveHorizontal;
     float moveVertical;
     float moveVertiRaw;
     float moveHoriRaw;
-    Vector3 lastSafe = Vector3.zero;
+
     void Awake()
     {
         jumpCount = maxJumps;
@@ -35,13 +35,18 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
-        if (isGrounded == false) {
-
-        }
         moveHorizontal = Input.GetAxis("Horizontal");
         moveVertical = Input.GetAxis("Vertical");
         moveHoriRaw = Input.GetAxisRaw("Horizontal");
         moveVertiRaw = Input.GetAxisRaw("Vertical");
+
+        moveDirection = Vector3.zero;
+        moveDirection += Camera.main.transform.forward * moveVertical;
+        moveDirection += Camera.main.transform.right * moveHorizontal;
+        moveDirection.y = 0;
+
+        
+
         if (Input.GetKeyDown("space"))
         {
             if (isGrounded || jumpCount != 0)
@@ -50,18 +55,21 @@ public class PlayerMovement : MonoBehaviour
                 jumpCount -= 1;
             }
         }
-        if (isJump) {
+        if (isJump)
+        {
             isGrounded = false;
         }
         if (Input.GetKey("space"))
         {
             jumpHeld = true;
         }
-        else if (Input.GetKeyUp("space")) {
+        else if (Input.GetKeyUp("space"))
+        {
             jumpHeld = false;
             isJump = false;
         }
-        if (Input.GetKeyUp("space")) {
+        if (Input.GetKeyUp("space"))
+        {
             jumpHeld = false;
         }
     }
@@ -69,28 +77,27 @@ public class PlayerMovement : MonoBehaviour
     // We mark this as "FixedUpdate" because we are using it to mess with physics
     void FixedUpdate()
     {
-        moveDirection = Camera.main.transform.forward * moveVertical;
-        moveDirection += Camera.main.transform.right * moveHorizontal;
-        moveDirection.y = 0;
         transform.rotation = Quaternion.LookRotation(moveDirection, Vector2.up);
 
         rb.AddForce(transform.forward * forwardForce * Time.deltaTime * moveVertiRaw * moveVertical, ForceMode.VelocityChange);
         rb.AddForce(transform.forward * sidewaysForce * Time.deltaTime * moveHoriRaw * moveHorizontal, ForceMode.VelocityChange);
 
-        if (rb.position.y<= RespawnHeight) {
+        if (rb.position.y <= RespawnHeight)
+        {
             rb.position = respawn;
         }
         if (isJump)
         {
             rb.velocity += Vector3.up * -1 * rb.velocity.y;
-            rb.AddForce(0, jumpForce*Time.deltaTime, 0, ForceMode.VelocityChange);
+            rb.AddForce(0, jumpForce * Time.deltaTime, 0, ForceMode.VelocityChange);
             isJump = false;
         }
         if (rb.velocity.y < 0)
         {
             rb.velocity += Vector3.up * Physics.gravity.y * (fallMultiplier - 1) * Time.deltaTime;
         }
-        else if (rb.velocity.y > 0 && !jumpHeld) {
+        else if (rb.velocity.y > 0 && !jumpHeld)
+        {
 
             rb.velocity += Vector3.up * Physics.gravity.y * (lowJumpMultiplier - 1) * Time.deltaTime;
         }

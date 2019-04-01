@@ -12,7 +12,6 @@ public class BottomCollision : MonoBehaviour
         if(collisionInfo.collider.tag == "Ground") {
             movement.jumpCount = movement.maxJumps;
             movement.isGrounded = true;
-            Debug.Log("touchdown");
         }
     }
     
@@ -22,7 +21,6 @@ public class BottomCollision : MonoBehaviour
         {
             movement.isGrounded = false;
             collided = false;
-            Debug.Log("Left the ground");
         }
     }
     

@@ -8,14 +8,16 @@ public class CameraOrbit : MonoBehaviour
     public Transform playerTransform;
     private Vector3 _cameraOffset;
 
-    [Range(0.01f, 1.0f)]
-    public float smoothFactor = 10f;
+    [Range(0.01f, 1f)]
+    public float smoothFactor = 1f;
 
     public bool lookAtPlayer = false;
 
     public bool rotateAroundPlayer = false;
 
     public float rotationSpeed = 5.0f;
+
+    Vector3 playerPos;
     // Start is called before the first frame update
     void Start()
     {
@@ -23,14 +25,26 @@ public class CameraOrbit : MonoBehaviour
     }
 
     // Update is called once per frame
-    void LateUpdate()
+
+    void Update()
     {
-        if (rotateAroundPlayer) {
-            Quaternion camTurnAngle = 
+        if (rotateAroundPlayer)
+        {
+            Quaternion camTurnAngleHori =
                 Quaternion.AngleAxis(Input.GetAxis("Mouse X") * rotationSpeed, Vector3.up);
-            _cameraOffset = camTurnAngle * _cameraOffset;
+            Quaternion camTurnAngleVerti =
+                Quaternion.AngleAxis(Input.GetAxis("Mouse Y") * rotationSpeed, transform.right*-1);
+            _cameraOffset = camTurnAngleHori * _cameraOffset;
+            _cameraOffset = camTurnAngleVerti * _cameraOffset;
+
         }
-        Vector3 newPos = playerTransform.position + _cameraOffset;
+
+        playerPos = playerTransform.position;
+        
+    }
+    void FixedUpdate()
+    {
+        Vector3 newPos = playerPos + _cameraOffset;
         transform.position = Vector3.Slerp(transform.position, newPos, smoothFactor);
         if (lookAtPlayer || rotateAroundPlayer) {
             transform.LookAt(playerTransform);
