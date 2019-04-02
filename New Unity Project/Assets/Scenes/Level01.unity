@@ -328,16 +328,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rb: {fileID: 27701487}
   cameraObject: {fileID: 534669904}
+  jumper: {fileID: 1844471085}
   forwardForce: 50
   sidewaysForce: 50
   jumpForce: 1000
   maxJumps: 2
   jumpCount: 2
+  isJump: 0
   respawn: {x: 0, y: 3, z: 0}
   isGrounded: 1
   lowJumpMultiplier: 3
   fallMultiplier: 7
   RespawnHeight: -20
+  smoothMove: 0.135
+  moveDirection: {x: 0, y: 0, z: 0}
 --- !u!1 &170076733
 GameObject:
   m_ObjectHideFlags: 0
@@ -908,13 +912,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1844471080}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 27701486}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
 --- !u!23 &1844471082
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -993,3 +997,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 27701488}
   anim: {fileID: 1844471084}
+  doubleJump: 0

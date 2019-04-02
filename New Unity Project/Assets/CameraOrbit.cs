@@ -33,7 +33,7 @@ public class CameraOrbit : MonoBehaviour
             Quaternion camTurnAngleHori =
                 Quaternion.AngleAxis(Input.GetAxis("Mouse X") * rotationSpeed, Vector3.up);
             Quaternion camTurnAngleVerti =
-                Quaternion.AngleAxis(Input.GetAxis("Mouse Y") * rotationSpeed, transform.right*-1);
+                Quaternion.AngleAxis(Input.GetAxis("Mouse Y") * rotationSpeed, transform.right*-1f);
             _cameraOffset = camTurnAngleHori * _cameraOffset;
             _cameraOffset = camTurnAngleVerti * _cameraOffset;
 
