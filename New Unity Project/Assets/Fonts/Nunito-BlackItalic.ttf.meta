@@ -1,0 +1,23 @@
+fileFormatVersion: 2
+guid: f60bff60ade59ad468b1fbc56bcbd71b
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: Nunito Black
+  fontNames:
+  - Nunito Black
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: 74c9f12831cdbb74aa9d551b4236f450, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  shouldRoundAdvanceValue: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
